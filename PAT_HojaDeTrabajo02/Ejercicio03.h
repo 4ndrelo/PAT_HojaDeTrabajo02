@@ -8,5 +8,6 @@ class Ejercicio03
 {
 public:
 	int calculate(string s);
+
 };
 
