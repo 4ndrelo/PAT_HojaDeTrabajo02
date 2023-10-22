@@ -1,47 +1,35 @@
 #include "Ejercicio03.h"
 
-int Ejercicio03::calculate(std::string s) 
+int Ejercicio03::calculate(string s)
 {
-    return evaluateExpression(s);
-}
-int evaluateExpression(const std::string& s) {
-    std::stack<int> numStack;
-    std::stack<char> opStack;
-    int num = 0;
-    char sign = '+';
+    int result = 0;  
+    int num = 0;     
 
-    for (int i = 0; i < s.length(); i++) {
-        char c = s[i];
+    int sign = 1;  
+    for (char c : s) {
         if (isdigit(c)) {
-            num = num * 10 + (c - '0');
+            num = num * 10 + (c - '0'); 
         }
-        if (!isdigit(c) && c != ' ' || i == s.length() - 1) {
-            if (sign == '-') {
-                numStack.push(-num);
-            }
-            else if (sign == '+') {
-                numStack.push(num);
-            }
-            else if (sign == '*') {
-                int top = numStack.top();
-                numStack.pop();
-                numStack.push(top * num);
-            }
-            else if (sign == '/') {
-                int top = numStack.top();
-                numStack.pop();
-                numStack.push(top / num);
-            }
+        else if (c == '+') {
+            result += sign * num;  
+            num = 0;  
+            sign = 1; 
+        }
+        else if (c == '-') {
+            result += sign * num;
             num = 0;
-            sign = c;
+            sign = -1; 
+        }
+        else if (c == '*') {
+            num = num * (s[++i] - '0'); 
+        }
+        else if (c == '/') {
+            num = num / (s[++i] - '0'); 
         }
     }
 
-    int result = 0;
-    while (!numStack.empty()) {
-        result += numStack.top();
-        numStack.pop();
-    }
+    
+    result += sign * num;
 
     return result;
 }
