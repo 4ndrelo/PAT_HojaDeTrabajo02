@@ -1,6 +1,10 @@
 #pragma once
+#include "Node.h"
 class FrontMiddleBackQueue
 {
+private:
+	Node<int>* head; 
+	int size;
 public:
 	FrontMiddleBackQueue();
 

@@ -4,7 +4,7 @@ int Ejercicio03::calculate(string s)
 {
     int result = 0;  
     int num = 0;     
-
+    int i
     int sign = 1;  
     for (char c : s) {
         if (isdigit(c)) {
