@@ -1,144 +1,101 @@
 #include "Ejercicio04.h"
-
-class FrontMiddleBackQueue
+FrontMiddleBackQueue::FrontMiddleBackQueue()
 {
-private:
-    Node<int>* head;
-    Node<int>* middle;
-    int size;
+    head = nullptr;
+    size = 0;
+}
 
-public:
-    FrontMiddleBackQueue()
-    {
-        head = nullptr;
-        middle = nullptr;
-        size = 0;
+void FrontMiddleBackQueue::pushFront(int value)
+{
+    Node<int>* newNode = new Node<int>{ value, head };
+    head = newNode;
+    size++;
+}
+
+void FrontMiddleBackQueue::pushMiddle(int value)
+{
+    if (size == 0) {
+        pushFront(value);
     }
+    else {
+        int mid = (size - 1) / 2;
+        Node<int>* current = head;
+        for (int i = 0; i < mid; i++) {
+            current = current->next;
+        }
+        Node<int>* newNode = new Node<int>{ value, current->next };
+        current->next = newNode;
+        size++;
+    }
+}
 
-    void pushFront(int value)
-    {
-        Node<int>* newNode = new Node<int>{ value, head };
+void FrontMiddleBackQueue::pushBack(int value)
+{
+    Node<int>* newNode = new Node<int>{ value, nullptr };
+    if (size == 0) {
         head = newNode;
-
-        if (size == 0) {
-            middle = head;
-        }
-        else if (size % 2 == 0) {
-            middle = middle->next;
-        }
-
-        size++;
     }
-
-    void pushMiddle(int value)
-    {
-        if (size == 0) {
-            head = new Node<int>{ value, nullptr };
-            middle = head;
+    else {
+        Node<int>* current = head;
+        while (current->next != nullptr) {
+            current = current->next;
         }
-        else if (size % 2 == 0) {
-            Node<int>* newNode = new Node<int>{ value, middle->next };
-            middle->next = newNode;
-            middle = newNode;
-        }
-        else {
-            Node<int>* newNode = new Node<int>{ value, middle };
-            middle = newNode;
-        }
-
-        size++;
+        current->next = newNode;
     }
+    size++;
+}
 
-    void pushBack(int value)
-    {
-        if (size == 0) {
-            head = new Node<int>{ value, nullptr };
-            middle = head;
-        }
-        else {
-            Node<int>* newNode = new Node<int>{ value, nullptr };
-            Node<int>* current = head;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = newNode;
-        }
-
-        size++;
+int FrontMiddleBackQueue::popFront()
+{
+    if (size == 0) {
+        return -1;
     }
+    int value = head->value;
+    Node<int>* temp = head;
+    head = head->next;
+    delete temp;
+    size--;
+    return value;
+}
 
-    int popFront()
-    {
-        if (size == 0) {
-            return -1;
-        }
+int FrontMiddleBackQueue::popMiddle()
+{
+    if (size == 0) {
+        return -1;
+    }
+    int mid = (size - 1) / 2;
+    Node<int>* current = head;
+    for (int i = 0; i < mid; i++) {
+        current = current->next;
+    }
+    int value = current->next->value;
+    Node<int>* temp = current->next;
+    current->next = current->next->next;
+    delete temp;
+    size--;
+    return value;
+}
 
+int FrontMiddleBackQueue::popBack()
+{
+    if (size == 0) {
+        return -1;
+    }
+    if (size == 1) {
         int value = head->value;
-        Node<int>* temp = head;
-        head = head->next;
-        delete temp;
-
-        if (size % 2 == 0) {
-            middle = middle->next;
-        }
-
+        delete head;
+        head = nullptr;
         size--;
-
         return value;
     }
-
-    int popMiddle()
-    {
-        if (size == 0) {
-            return -1;
-        }
-
-        int value = middle->value;
-        if (size == 1) {
-            delete head;
-            head = nullptr;
-            middle = nullptr;
-        }
-        else {
-            Node<int>* current = head;
-            while (current->next != middle) {
-                current = current->next;
-            }
-            current->next = middle->next;
-            delete middle;
-            middle = current;
-        }
-
-        size--;
-
-        return value;
+    Node<int>* current = head;
+    while (current->next->next != nullptr) {
+        current = current->next;
     }
-
-    int popBack()
-    {
-        if (size == 0) {
-            return -1;
-        }
-
-        int value;
-        if (size == 1) {
-            value = head->value;
-            delete head;
-            head = nullptr;
-            middle = nullptr;
-        }
-        else {
-            Node<int>* current = head;
-            while (current->next->next != nullptr) {
-                current = current->next;
-            }
-            value = current->next->value;
-            delete current->next;
-            current->next = nullptr;
-        }
-
-        size--;
-
-        return value;
-    }
-};
+    int value = current->next->value;
+    delete current->next;
+    current->next = nullptr;
+    size--;
+    return value;
+}
+    
