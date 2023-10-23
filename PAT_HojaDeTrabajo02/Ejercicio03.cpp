@@ -4,16 +4,10 @@
 #include <stack>
 #include <vector>
 #include <cctype>
-using namespace std;
+
 
 using std::string;
 using std::stack;
-
-class Ejercicio03
-{
-public:
-    int calculate(string s);
-};
 
 
 
