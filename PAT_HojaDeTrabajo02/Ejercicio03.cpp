@@ -3,79 +3,68 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <string>
+#include <stack>
+#include <cctype>
+
 
 int Ejercicio03::calculate(string s)
 {
-    std::stack<int> numbers;
-    std::stack<char> operators;
-    std::vector<char> validOperators = { '+', '-', '*', '/' };
-
+    stack<int> nums;
+    stack<char> ops;
     int num = 0;
-    for (char c : s) {
-        if (c == ' ') {
-            continue;  // Saltar espacios en blanco
-        }
+    char op = '+';
 
+    for (char c : s) {
         if (isdigit(c)) {
             num = num * 10 + (c - '0');
         }
-        else {
-            numbers.push(num);
-            num = 0;
-
-            while (!operators.empty() && std::find(validOperators.begin(), validOperators.end(), operators.top()) != validOperators.end()) {
-                if ((c == '+' || c == '-') && (operators.top() == '*' || operators.top() == '/')) {
-                    break;
-                }
-                int b = numbers.top();
-                numbers.pop();
-                int a = numbers.top();
-                numbers.pop();
-                char op = operators.top();
-                operators.pop();
-
-                if (op == '+') {
-                    numbers.push(a + b);
-                }
-                else if (op == '-') {
-                    numbers.push(a - b);
-                }
-                else if (op == '*') {
-                    numbers.push(a * b);
-                }
-                else if (op == '/') {
-                    numbers.push(a / b);
-                }
+        else if (c == '+' || c == '-' || c == '*' || c == '/') {
+            if (op == '+') {
+                nums.push(num);
+            }
+            else if (op == '-') {
+                nums.push(-num);
+            }
+            else if (op == '*') {
+                int prev = nums.top();
+                nums.pop();
+                nums.push(prev * num);
+            }
+            else if (op == '/') {
+                int prev = nums.top();
+                nums.pop();
+                nums.push(prev / num);
             }
 
-            operators.push(c);
+            num = 0;
+            op = c;
         }
     }
 
-    numbers.push(num);
-
-    while (!operators.empty()) {
-        int b = numbers.top();
-        numbers.pop();
-        int a = numbers.top();
-        numbers.pop();
-        char op = operators.top();
-        operators.pop();
-
-        if (op == '+') {
-            numbers.push(a + b);
-        }
-        else if (op == '-') {
-            numbers.push(a - b);
-        }
-        else if (op == '*') {
-            numbers.push(a * b);
-        }
-        else if (op == '/') {
-            numbers.push(a / b);
-        }
+    if (op == '+') {
+        nums.push(num);
+    }
+    else if (op == '-') {
+        nums.push(-num);
+    }
+    else if (op == '*') {
+        int prev = nums.top();
+        nums.pop();
+        nums.push(prev * num);
+    }
+    else if (op == '/') {
+        int prev = nums.top();
+        nums.pop();
+        nums.push(prev / num);
     }
 
-    return numbers.top();
+    int result = 0;
+    while (!nums.empty()) {
+        result += nums.top();
+        nums.pop();
+    }
+
+    return result;
 }
 

@@ -1,102 +1,118 @@
 #include "Ejercicio04.h"
 
-FrontMiddleBackQueue::FrontMiddleBackQueue() {
-    head = nullptr;
-    size = 0;
+FrontMiddleBackQueue::FrontMiddleBackQueue() : head(nullptr), size(0)
+{
+
+
 }
 
-void FrontMiddleBackQueue::pushFront(int value) {
-    Node<int>* newNode = new Node<int>{ value, head };
+
+
+
+void FrontMiddleBackQueue::pushFront(int value) 
+{
+    Node* newNode = new Node(value);
+    newNode->next = head;
     head = newNode;
     size++;
+
 }
 
-void FrontMiddleBackQueue::pushMiddle(int value) {
+void FrontMiddleBackQueue::pushMiddle(int value) 
+{
     if (size == 0) {
         pushFront(value);
-        return;
     }
-
-    int middlePos = (size - 1) / 2;
-    Node<int>* current = head;
-    for (int i = 0; i < middlePos; i++) {
-        current = current->next;
+    else {
+        int middleIndex = (size - 1) / 2;
+        Node* curr = head;
+        for (int i = 0; i < middleIndex; i++) {
+            curr = curr->next;
+        }
+        Node* newNode = new Node(value);
+        newNode->next = curr->next;
+        curr->next = newNode;
+        size++;
     }
+    
 
-    Node<int>* newNode = new Node<int>{ value, current->next };
-    current->next = newNode;
+}
+
+void FrontMiddleBackQueue::pushBack(int value) 
+{
+    Node* newNode = new Node(value);
+    if (size == 0) {
+        head = newNode;
+    }
+    else {
+        Node* curr = head;
+        while (curr->next) {
+            curr = curr->next;
+        }
+        curr->next = newNode;
+    }
     size++;
 }
 
-void FrontMiddleBackQueue::pushBack(int value) {
+int FrontMiddleBackQueue::popFront() 
+{
     if (size == 0) {
-        pushFront(value);
-        return;
+        return -1; 
     }
-
-    Node<int>* current = head;
-    while (current->next) {
-        current = current->next;
-    }
-
-    Node<int>* newNode = new Node<int>{ value, nullptr };
-    current->next = newNode;
-    size++;
-}
-
-int FrontMiddleBackQueue::popFront() {
-    if (size == 0) {
-        return -1;
-    }
-
-    int value = head->value;
-    Node<int>* temp = head;
+    int value = head->data;
+    Node* temp = head;
     head = head->next;
     delete temp;
     size--;
     return value;
 }
 
-int FrontMiddleBackQueue::popMiddle() {
-    if (size <= 1) {
-        return popFront();
-    }
-
-    int middlePos = (size - 1) / 2;
-    Node<int>* current = head;
-    for (int i = 0; i < middlePos; i++) {
-        current = current->next;
-    }
-
-    int value = current->next->value;
-    Node<int>* temp = current->next;
-    current->next = temp->next;
-    delete temp;
-    size--;
-    return value;
-}
-
-int FrontMiddleBackQueue::popBack() {
+int FrontMiddleBackQueue::popMiddle() 
+{
     if (size == 0) {
-        return -1;
+        return -1; 
     }
-
     if (size == 1) {
-        int value = head->value;
+        int value = head->data;
         delete head;
         head = nullptr;
         size = 0;
         return value;
     }
 
-    Node<int>* current = head;
-    while (current->next->next) {
-        current = current->next;
+    int middleIndex = (size - 1) / 2;
+    Node* curr = head;
+    for (int i = 0; i < middleIndex; i++) {
+        curr = curr->next;
+    }
+    int value = curr->next->data;
+    Node* temp = curr->next;
+    curr->next = curr->next->next;
+    delete temp;
+    size--;
+    return value;
+}
+
+int FrontMiddleBackQueue::popBack() 
+{
+    if (size == 0) {
+        return -1; 
+    }
+    if (size == 1) {
+        int value = head->data;
+        delete head;
+        head = nullptr;
+        size = 0;
+        return value;
     }
 
-    int value = current->next->value;
-    delete current->next;
-    current->next = nullptr;
+    Node* curr = head;
+    while (curr->next->next) {
+        curr = curr->next;
+    }
+    int value = curr->next->data;
+    delete curr->next;
+    curr->next = nullptr;
     size--;
     return value;
 }
