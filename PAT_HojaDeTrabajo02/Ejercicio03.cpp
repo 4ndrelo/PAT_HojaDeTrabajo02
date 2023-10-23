@@ -3,9 +3,18 @@
 #include <string>
 #include <stack>
 #include <vector>
-#include <string>
-#include <stack>
 #include <cctype>
+using namespace std;
+
+using std::string;
+using std::stack;
+
+class Ejercicio03
+{
+public:
+    int calculate(string s);
+};
+
 
 
 int Ejercicio03::calculate(string s)
@@ -16,55 +25,58 @@ int Ejercicio03::calculate(string s)
     char op = '+';
 
     for (char c : s) {
-        if (isdigit(c)) {
+        if (std::isdigit(c)) {
             num = num * 10 + (c - '0');
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/') {
-            if (op == '+') {
-                nums.push(num);
-            }
-            else if (op == '-') {
-                nums.push(-num);
-            }
-            else if (op == '*') {
-                int prev = nums.top();
+            while (!ops.empty() && (ops.top() == '*' || ops.top() == '/')) {
+                int b = nums.top();
                 nums.pop();
-                nums.push(prev * num);
-            }
-            else if (op == '/') {
-                int prev = nums.top();
+                int a = nums.top();
                 nums.pop();
-                nums.push(prev / num);
+                char curr_op = ops.top();
+                ops.pop();
+                if (curr_op == '*') {
+                    nums.push(a * b);
+                }
+                else if (curr_op == '/') {
+                    nums.push(a / b);
+                }
             }
 
+            nums.push(num);
             num = 0;
             op = c;
+            ops.push(c);
+        }
+        else if (c == ' ') {
+            continue;
         }
     }
 
-    if (op == '+') {
-        nums.push(num);
-    }
-    else if (op == '-') {
-        nums.push(-num);
-    }
-    else if (op == '*') {
-        int prev = nums.top();
+    while (!ops.empty()) {
+        int b = nums.top();
         nums.pop();
-        nums.push(prev * num);
-    }
-    else if (op == '/') {
-        int prev = nums.top();
+        int a = nums.top();
         nums.pop();
-        nums.push(prev / num);
+        char curr_op = ops.top();
+        ops.pop();
+        if (curr_op == '+') {
+            nums.push(a + b);
+        }
+        else if (curr_op == '-') {
+            nums.push(a - b);
+        }
+        else if (curr_op == '*') {
+            nums.push(a * b);
+        }
+        else if (curr_op == '/') {
+            nums.push(a / b);
+        }
     }
 
-    int result = 0;
-    while (!nums.empty()) {
-        result += nums.top();
-        nums.pop();
-    }
+    return nums.top();
 
-    return result;
+
 }
 
