@@ -8,9 +8,5 @@ class Ejercicio03
 {
 public:
 	int calculate(string s);
-	int getPrecedence(char op);
-	bool isOperator(char c);
-	vector<string> infixToPostfix(string s);
-	int evaluatePostfix(vector<string> postfix);
 };
 

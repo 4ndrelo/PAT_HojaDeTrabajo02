@@ -3,8 +3,10 @@
 class FrontMiddleBackQueue
 {
 private:
-	Node<int>* head; 
+	Node<int>* head;
+	Node<int>* middle;
 	int size;
+	
 public:
 	FrontMiddleBackQueue();
 
