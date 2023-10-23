@@ -6,71 +6,49 @@
 #include <cctype>
 
 
-using std::string;
-using std::stack;
-
-
 
 int Ejercicio03::calculate(string s)
 {
-    stack<int> nums;
-    stack<char> ops;
+    stack<int> numbers;
+    stack<char> operators;
+
     int num = 0;
-    char op = '+';
+    int result = 0;
+    int sign = 1;  // 1 representa positivo, -1 representa negativo
 
     for (char c : s) {
-        if (std::isdigit(c)) {
+        if (isdigit(c)) {
             num = num * 10 + (c - '0');
         }
-        else if (c == '+' || c == '-' || c == '*' || c == '/') {
-            while (!ops.empty() && (ops.top() == '*' || ops.top() == '/')) {
-                int b = nums.top();
-                nums.pop();
-                int a = nums.top();
-                nums.pop();
-                char curr_op = ops.top();
-                ops.pop();
-                if (curr_op == '*') {
-                    nums.push(a * b);
-                }
-                else if (curr_op == '/') {
-                    nums.push(a / b);
-                }
+        else {
+            if (c == '+') {
+                result += sign * num;
+                sign = 1;
             }
-
-            nums.push(num);
-            num = 0;
-            op = c;
-            ops.push(c);
-        }
-        else if (c == ' ') {
-            continue;
-        }
-    }
-
-    while (!ops.empty()) {
-        int b = nums.top();
-        nums.pop();
-        int a = nums.top();
-        nums.pop();
-        char curr_op = ops.top();
-        ops.pop();
-        if (curr_op == '+') {
-            nums.push(a + b);
-        }
-        else if (curr_op == '-') {
-            nums.push(a - b);
-        }
-        else if (curr_op == '*') {
-            nums.push(a * b);
-        }
-        else if (curr_op == '/') {
-            nums.push(a / b);
+            else if (c == '-') {
+                result += sign * num;
+                sign = -1;
+            }
+            else if (c == '*') {
+                int prev = numbers.top();
+                numbers.pop();
+                result += sign * prev;
+                num = 0;
+            }
+            else if (c == '/') {
+                int prev = numbers.top();
+                numbers.pop();
+                result += sign * prev;
+                num = 0;
+            }
+            else if (c == ' ') {
+                // Ignorar espacios en blanco
+                continue;
+            }
         }
     }
 
-    return nums.top();
-
-
+    result += sign * num;
+    return result;
 }
 

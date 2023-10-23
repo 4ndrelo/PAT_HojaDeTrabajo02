@@ -63,15 +63,34 @@ int FrontMiddleBackQueue::popMiddle()
     if (size == 0) {
         return -1;
     }
+
+    if (size == 1) {
+        int value = head->value;
+        delete head;
+        head = nullptr;
+        size--;
+        return value;
+    }
+
     int mid = (size - 1) / 2;
     Node<int>* current = head;
+    Node<int>* prev = nullptr;
+
     for (int i = 0; i < mid; i++) {
+        prev = current;
         current = current->next;
     }
-    int value = current->next->value;
-    Node<int>* temp = current->next;
-    current->next = current->next->next;
-    delete temp;
+
+    int value = current->value;
+
+    if (prev != nullptr) {
+        prev->next = current->next;
+    }
+    else {
+        head = current->next;
+    }
+
+    delete current;
     size--;
     return value;
 }
@@ -81,6 +100,7 @@ int FrontMiddleBackQueue::popBack()
     if (size == 0) {
         return -1;
     }
+
     if (size == 1) {
         int value = head->value;
         delete head;
@@ -88,13 +108,25 @@ int FrontMiddleBackQueue::popBack()
         size--;
         return value;
     }
+
     Node<int>* current = head;
-    while (current->next->next != nullptr) {
+    Node<int>* prev = nullptr;
+
+    while (current->next != nullptr) {
+        prev = current;
         current = current->next;
     }
-    int value = current->next->value;
-    delete current->next;
-    current->next = nullptr;
+
+    int value = current->value;
+
+    if (prev != nullptr) {
+        prev->next = nullptr;
+    }
+    else {
+        head = nullptr;
+    }
+
+    delete current;
     size--;
     return value;
 }
